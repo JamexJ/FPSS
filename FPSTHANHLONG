@@ -11,6 +11,7 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
+MainFrame.Visible = false -- Mặc định ẩn
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
@@ -125,7 +126,7 @@ StatusLabel.Parent = MainFrame
 -- Nút tròn thu/phóng (di chuyển được riêng)
 local ResizeButton = Instance.new("TextButton")
 ResizeButton.Size = UDim2.new(0, 25, 0, 25)
-ResizeButton.Position = UDim2.new(0.5, -12, 0.7, 0)
+ResizeButton.Position = UDim2.new(0.5, 40, 0.7, 0) -- offset sang phải
 ResizeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
 ResizeButton.Text = "+"
 ResizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -140,7 +141,8 @@ ResizeCorner.Parent = ResizeButton
 ResizeButton.Active = true
 ResizeButton.Draggable = true
 
-local Minimized = false
+-- Toggle hiển thị menu
+local Minimized = true -- menu mặc định ẩn
 ResizeButton.MouseButton1Click:Connect(function()
     if Minimized then
         MainFrame.Visible = true
@@ -191,7 +193,7 @@ ws.OnMessage:Connect(function(msg)
         local moneyVal = parseMoney(moneyStr)
 
         if moneyVal >= MinMS then
-            StatusLabel.Text = "[AutoJoin] Joining: "..moneyStr
+            StatusLabel.Text = "[AutoJoin] Joining: "..moneyStr.." | "..os.date("%H:%M:%S")
             local func, err = loadstring(data.data.join_script)
             if func then
                 pcall(func)
@@ -200,7 +202,7 @@ ws.OnMessage:Connect(function(msg)
                 warn("Failed to load join script:", err)
             end
         else
-            StatusLabel.Text = "[AutoJoin] Skipped: "..moneyStr.." < "..formatMoney(MinMS)
+            StatusLabel.Text = "[AutoJoin] Skipped: "..moneyStr.." < "..formatMoney(MinMS).." | "..os.date("%H:%M:%S")
         end
     end
 end)
